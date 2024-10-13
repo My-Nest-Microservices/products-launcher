@@ -58,9 +58,11 @@ services:
 
   payments-ms:
     build: ./payments-ms
-    volumens:
+    volumes:
       - ./payments-ms/src:/usr/src/app/src
     command: npm run start:dev
+    ports:
+      - 3003:3003
     environment:
       - PORT=3003
       - NATS_SERVERS=${NATS_SERVERS}
