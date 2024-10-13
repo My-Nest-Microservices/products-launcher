@@ -67,6 +67,9 @@ services:
       - PORT=3003
       - NATS_SERVERS=${NATS_SERVERS}
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+      - SUCCESS_URL=${SUCCESS_URL}
+      - CANCEL_URL=${CANCEL_URL}
     depends_on:
       - nats-server
       - client-gateway
