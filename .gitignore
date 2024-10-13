@@ -1,0 +1,4 @@
+.env
+client-gateway/node_modules/
+products-ms/node_modules/
+orders-ms/node_modules/
