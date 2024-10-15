@@ -43,6 +43,11 @@ services:
       - POSTGRES_DB=ordersdb
     volumes:
       - ./orders-ms/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready']
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   orders-ms:
     build: ./orders-ms
@@ -54,9 +59,12 @@ services:
       - NATS_SERVERS=${NATS_SERVERS}
       - DATABASE_URL=postgresql://postgres:postgres@orders-db:5432/ordersdb?schema=public
     depends_on:
-      - nats-server
-      - client-gateway
-      - orders-db
+      nats-server:
+        condition: service_started
+      client-gateway:
+        condition: service_started
+      orders-db:
+        condition: service_healthy
 
   payments-ms:
     build: ./payments-ms
@@ -72,6 +80,17 @@ services:
       - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
       - SUCCESS_URL=${SUCCESS_URL}
       - CANCEL_URL=${CANCEL_URL}
+    depends_on:
+      - nats-server
+      - client-gateway
+
+  auth-ms:
+    build: ./auth-ms
+    volumes:
+      - ./auth-ms/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - NATS_SERVERS=${NATS_SERVERS}
     depends_on:
       - nats-server
       - client-gateway
