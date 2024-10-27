@@ -2,3 +2,5 @@
 client-gateway/node_modules/
 products-ms/node_modules/
 orders-ms/node_modules/
+
+k8s/tienda/microservices-439614-095e49cb87f1.json
